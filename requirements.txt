@@ -1,0 +1,3 @@
+yfinance
+rotkehlchen @ git+https://github.com/rotki/rotki.git
+pandas
