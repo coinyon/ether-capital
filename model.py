@@ -16,7 +16,7 @@ for ETHC_ticker in ('DTSRF', 'ETHC.NE', '2KV.MU'):
     current_holdings = holdings.iloc[-1]
 
     shares_outstanding = ticker.info['sharesOutstanding']
-    price = ticker.history(period='1d').iloc[-1].Close
+    price = ticker.history(period='5d').iloc[-1].Close
 
     print("--")
     print(f"{ticker.info['longName']} ({ticker.info['symbol']}) Holdings")
