@@ -62,7 +62,7 @@ if dp_token:
         dp.Table(pd.DataFrame(current_holdings).iloc[1:]),
         f'### Share Price Premium',
         dp.Table(df),
-        f'The average premium is {df["premium"].mean():+.1f} %'
+        f'The maximum premium is {df["premium"].max():+.1f} %'
     )
 
     r.publish(
