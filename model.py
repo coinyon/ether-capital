@@ -5,7 +5,7 @@ import os
 from rotkehlchen.assets.asset import Asset
 from rotkehlchen.externalapis.coingecko import Coingecko
 
-gc = Coingecko()
+gc = Coingecko(data_directory='.')
 rows = []
 
 holdings = pd.read_csv("./holdings.csv", sep=';', parse_dates=['Date'])
@@ -16,8 +16,8 @@ for ETHC_ticker in ('DTSRF', 'ETHC.NE', '2KV.MU'):
     ticker = yf.Ticker(ETHC_ticker)
 
     currency = Asset(ticker.info['currency'])
-    eth_price = float(gc.simple_price(Asset('ETH'), currency))
-    mkr_price = float(gc.simple_price(Asset('MKR'), currency))
+    eth_price = float(gc.query_current_price(Asset('ETH'), currency))
+    mkr_price = float(gc.query_current_price(Asset('MKR'), currency))
 
     shares_outstanding = ticker.info['sharesOutstanding']
     price = ticker.history(period='5d').iloc[-1].Close
