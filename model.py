@@ -8,7 +8,7 @@ from rotkehlchen.externalapis.coingecko import Coingecko
 gc = Coingecko(data_directory='.')
 rows = []
 
-holdings = pd.read_csv("./holdings.csv", sep=';', parse_dates=['Date'])
+holdings = pd.read_csv("./holdings.csv", parse_dates=['Date'])
 current_holdings = holdings.iloc[-1]
 
 
