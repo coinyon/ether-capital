@@ -20,6 +20,7 @@ for ETHC_ticker in ('DTSRF', 'ETHC.NE', '2KV.MU'):
     mkr_price = float(gc.query_current_price(Asset('MKR'), currency))
 
     shares_outstanding = ticker.info['sharesOutstanding']
+    shares_outstanding = 33_780_000
     price = ticker.history(period='5d').iloc[-1].Close
 
     print("--")
@@ -33,6 +34,7 @@ for ETHC_ticker in ('DTSRF', 'ETHC.NE', '2KV.MU'):
     nav = current_holdings.ETH * eth_price + current_holdings.MKR * mkr_price + current_holdings.Wyre_USD
     nav_per_share = nav / shares_outstanding
 
+    print("Shares outstanding:\t{0}".format(shares_outstanding))
     print("NAV:\t{0:.0f} {1}".format(nav, currency.symbol))
     print("NAV per share:\t{0:.2f} {1}".format(nav_per_share, currency.symbol))
     print("Share price:\t{0:.2f} {1}".format(price, currency.symbol))
@@ -44,6 +46,7 @@ for ETHC_ticker in ('DTSRF', 'ETHC.NE', '2KV.MU'):
         'nav': nav,
         'nav_per_share': nav_per_share,
         'share_price': price,
+        'shares_outstanding': shares_outstanding,
         'premium': (price / nav_per_share - 1) * 100
     }]
 
