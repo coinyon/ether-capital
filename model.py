@@ -2,7 +2,7 @@ import pandas as pd
 import yfinance as yf
 import os
 
-from rotkehlchen.assets.asset import Asset
+from rotkehlchen.assets.utils import symbol_to_asset_or_token
 from rotkehlchen.externalapis.coingecko import Coingecko
 
 gc = Coingecko(data_directory='.')
@@ -15,9 +15,9 @@ current_holdings = holdings.iloc[-1]
 for ETHC_ticker in ('DTSRF', 'ETHC.NE', '2KV.MU'):
     ticker = yf.Ticker(ETHC_ticker)
 
-    currency = Asset(ticker.info['currency'])
-    eth_price = float(gc.query_current_price(Asset('ETH'), currency))
-    mkr_price = float(gc.query_current_price(Asset('MKR'), currency))
+    currency = symbol_to_asset_or_token(ticker.info['currency'])
+    eth_price = float(gc.query_current_price(symbol_to_asset_or_token('ETH'), currency))
+    mkr_price = float(gc.query_current_price(symbol_to_asset_or_token('MKR'), currency))
 
     shares_outstanding = ticker.info['sharesOutstanding']
     shares_outstanding = 33_780_000
