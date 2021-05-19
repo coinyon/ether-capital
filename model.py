@@ -1,12 +1,15 @@
 import pandas as pd
+import datetime
 import yfinance as yf
 import os
+import datapane as dp
 
 from rotkehlchen.assets.utils import symbol_to_asset_or_token
 from rotkehlchen.externalapis.coingecko import Coingecko
 
 gc = Coingecko(data_directory='.')
 rows = []
+now = datetime.datetime.now()
 
 holdings = pd.read_csv("./holdings.csv", parse_dates=['Date'])
 current_holdings = holdings.iloc[-1]
@@ -50,26 +53,22 @@ for ETHC_ticker in ('DTSRF', 'ETHC.NE', '2KV.MU'):
         'premium': (price / nav_per_share - 1) * 100
     }]
 
-dp_token = os.environ.get('DATAPANE_TOKEN')
+df = pd.DataFrame(rows)
+r = dp.Report(
+    f'# Ether Capital Corp. NAV',
+    dp.Text(f'Updated {now}'),
+    f'### Holdings',
+    dp.Table(pd.DataFrame(current_holdings).iloc[1:]),
+    f'### Share Price Premium',
+    dp.Table(df),
+    f'The maximum discount is {-df["premium"].min():.1f} %' \
+            if df["premium"].mean() < 0 else
+            f'The maximum premium is {df["premium"].max():+.1f} %'
+)
 
-if dp_token:
-    import datapane as dp
-    dp.login(token=dp_token)
-
-    df = pd.DataFrame(rows)
-    r = dp.Report(
-        f'### Holdings',
-        dp.Table(pd.DataFrame(current_holdings).iloc[1:]),
-        f'### Share Price Premium',
-        dp.Table(df),
-        f'The maximum discount is {-df["premium"].min():.1f} %' \
-                if df["premium"].mean() < 0 else
-                f'The maximum premium is {df["premium"].max():+.1f} %'
-    )
-
-    r.publish(
-        name=f'Ether Capital Corp. Premium',
-        open=False,
-        description=f'Calculate the premium of the ETHC share price compared to the holdings'
-    )
+r.save(
+    path='report.html',
+    name=f'Ether Capital Corp. NAV',
+    open=False
+)
 
