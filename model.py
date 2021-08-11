@@ -1,13 +1,16 @@
-import pandas as pd
 import datetime
-import yfinance as yf
 import os
-import datapane as dp
+from pathlib import Path
 
+import datapane as dp
+import pandas as pd
+import yfinance as yf
 from rotkehlchen.assets.utils import symbol_to_asset_or_token
 from rotkehlchen.externalapis.coingecko import Coingecko
+from rotkehlchen.globaldb.handler import GlobalDBHandler
 
-gc = Coingecko(data_directory='.')
+db = GlobalDBHandler(Path('.'))
+gc = Coingecko()
 rows = []
 now = datetime.datetime.now()
 
