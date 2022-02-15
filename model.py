@@ -24,6 +24,7 @@ for ETHC_ticker in ('DTSRF', 'ETHC.NE', '2KV.MU'):
     currency = symbol_to_asset_or_token(ticker.info['currency'])
     eth_price = float(gc.query_current_price(symbol_to_asset_or_token('ETH'), currency))
     mkr_price = float(gc.query_current_price(symbol_to_asset_or_token('MKR'), currency))
+    usd_price = float(gc.query_current_price(symbol_to_asset_or_token('USDC'), currency))
 
     shares_outstanding = ticker.info['sharesOutstanding']
     shares_outstanding = 33_780_000
@@ -32,12 +33,16 @@ for ETHC_ticker in ('DTSRF', 'ETHC.NE', '2KV.MU'):
     print("--")
     print(f"{ticker.info['longName']} ({ticker.info['symbol']}) Holdings")
     print()
-    print("ETH:\t", current_holdings.ETH)
+    print(f"ETH:\t{current_holdings.ETH}\t{current_holdings.ETH * eth_price} {currency.symbol}")
+    print(f"Staked ETH:\t{current_holdings.StakedETH}")
     print("MKR:\t", current_holdings.MKR)
-    print("Wyre:\t", current_holdings.Wyre_USD)
+    print("Wyre:\t", current_holdings.Wyre_USD * usd_price)
     print()
 
-    nav = current_holdings.ETH * eth_price + current_holdings.MKR * mkr_price + current_holdings.Wyre_USD
+    nav = current_holdings.ETH * eth_price + \
+            current_holdings.StakedETH * eth_price + \
+            current_holdings.MKR * mkr_price + \
+            current_holdings.Wyre_USD * usd_price
     nav_per_share = nav / shares_outstanding
 
     print("Shares outstanding:\t{0}".format(shares_outstanding))
